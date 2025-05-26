@@ -36,7 +36,7 @@ export default function DashboardSummary() {
   if (!data) return null;
 
   return (
-    <div className="max-w-5xl mx-auto mb-6">
+    <div className="mb-6">
       <div className="flex justify-between items-center mb-2">
         <button
           onClick={() => setExpanded(prev => !prev)}
@@ -50,7 +50,7 @@ export default function DashboardSummary() {
       </div>
 
       <div
-        className="overflow-hidden transition-all duration-3500 ease-in-out"
+        className="overflow-hidden transition-all duration-1500 ease-in-out"
         style={{ maxHeight: `${contentHeight}px` }}
       >
         <div ref={contentRef} className="grid md:grid-cols-2 gap-6 pt-4">

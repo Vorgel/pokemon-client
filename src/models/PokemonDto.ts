@@ -14,6 +14,6 @@ export interface PokemonDto {
   types: string[];
   moves: string[];
   abilities: string[];
-  evolvesFrom: string | null;
-  evolvesTo: string[];
+  evolvesFrom?: { id: number; name: string };
+  evolvesTo: { id: number; name: string }[];
 }

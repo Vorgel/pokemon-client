@@ -251,6 +251,7 @@ export default function PokemonListPage() {
         <PokemonDetailsModal
           pokemonId={selectedId}
           onClose={() => setSelectedId(null)}
+          onChangePokemon={(id: number) => setSelectedId(id)} 
         />
       )}
     </section>

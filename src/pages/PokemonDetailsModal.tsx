@@ -5,9 +5,10 @@ import { PokemonDto } from '../models';
 interface Props {
   pokemonId: number;
   onClose: () => void;
+  onChangePokemon: (id: number) => void;
 }
 
-export default function PokemonDetailsModal({ pokemonId, onClose }: Props) {
+export default function PokemonDetailsModal({ pokemonId, onClose, onChangePokemon }: Props) {
   const [pokemon, setPokemon] = useState<PokemonDto | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -30,8 +31,15 @@ export default function PokemonDetailsModal({ pokemonId, onClose }: Props) {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [onClose]);
 
+  const handlePokemonModalChange = async (newId: number) => {
+    onClose();
+    setTimeout(() => {
+      onChangePokemon(newId);
+    }, 300);
+  };
+
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/10 backdrop-blur-sm">
       <div
         ref={modalRef}
         style={{ width: '1000px', borderWidth: '1px' }}
@@ -51,9 +59,31 @@ export default function PokemonDetailsModal({ pokemonId, onClose }: Props) {
             <img src={pokemon.imageUrl} alt={pokemon.name} className="w-32 h-32 object-contain mx-auto mb-4" />
 
             <div className="grid grid-cols-2 gap-4 text-sm">
-              {pokemon.evolvesFrom && <p><strong>⬅️ Evolves from:</strong> {pokemon.evolvesFrom}</p>}
+              {pokemon.evolvesFrom?.id && (
+                <p>
+                  <strong>↩️ Evolves from:</strong>{' '}
+                  <button
+                    className="text-white-600 font-bold hover:text-blue-300"
+                    onClick={() => handlePokemonModalChange(pokemon.evolvesFrom!.id)}
+                  >
+                    {pokemon.evolvesFrom.name}
+                  </button>
+                </p>
+              )}
+
               {pokemon.evolvesTo.length > 0 && (
-                <p><strong>➡️ Evolves to:</strong> {pokemon.evolvesTo.join(', ')}</p>
+                <p>
+                  <strong>➡️ Evolves to:</strong>{' '}
+                  {pokemon.evolvesTo.map((evo, idx) => (
+                    <button
+                      key={evo.id}
+                      className="text-white-600 font-bold hover:text-blue-300 mr-2"
+                      onClick={() => handlePokemonModalChange(evo.id)}
+                    >
+                      {evo.name}
+                    </button>
+                  ))}
+                </p>
               )}
               <p><strong>🧬 Generation:</strong> {pokemon.generation}</p>
               <p><strong>✨ Abilities:</strong> {pokemon.abilities.join(', ')}</p>
